@@ -1,4 +1,4 @@
-package CSCI_566.simulations;
+package Project2.simulations;
 
 import inet.applications.httptools.configurator.HttpController;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
