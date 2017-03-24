@@ -59,12 +59,12 @@ network TwoTiered
                 @display("p=583.575,318.77;i=abstract/router_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        router_1: Router {
+        routerB: Router {
             parameters:
                 @display("p=367.715,317.51498;i=abstract/router_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        router_2: Router {
+        routerC: Router {
             parameters:
                 @display("p=165.65999,318.77;is=l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
@@ -84,17 +84,17 @@ network TwoTiered
                 @display("i=device/laptop_l;p=67.77,493.215");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        a_IoT[numIoT]: StandardHost {
+        iotA[numIoT]: StandardHost {
             parameters:
                 @display("p=591.105,493.215");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        b_IoT[numIoT]: StandardHost {
+        iotB[numIoT]: StandardHost {
             parameters:
                 @display("p=430.465,480.66498");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        c_IoT[numIoT]: StandardHost {
+        iotC[numIoT]: StandardHost {
             parameters:
                 @display("p=163.15,486.93997");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
@@ -102,36 +102,27 @@ network TwoTiered
 
     connections allowunconnected:
         router_A.ethg++ <--> ethernetline <--> serverA.ethg++;
-        router_1.ethg++ <--> ethernetline <--> serverA.ethg++;
-        router_2.ethg++ <--> ethernetline <--> serverA.ethg++;
+        routerB.ethg++ <--> ethernetline <--> serverA.ethg++;
+        routerC.ethg++ <--> ethernetline <--> serverA.ethg++;
         for i=0..numclients-1 {
             clientsA[i].ethg++ <--> ethernetline <--> router_A.ethg++;
         }
         for i=0..numclients-1 {
-            clientsB[i].ethg++ <--> ethernetline <--> router_1.ethg++;
+            clientsB[i].ethg++ <--> ethernetline <--> routerB.ethg++;
         }
         for i=0..numclients-1 {
-            clientsC[i].ethg++ <--> ethernetline <--> router_2.ethg++;
+            clientsC[i].ethg++ <--> ethernetline <--> routerC.ethg++;
         }
 
         for i=0..numIoT-1 {
-            a_IoT[i].ethg++ <--> ethernetline <--> router_A.ethg++;
+            iotA[i].ethg++ <--> ethernetline <--> router_A.ethg++;
         }
         for i=0..numIoT-1 {
-            b_IoT[i].ethg++ <--> ethernetline <--> router_1.ethg++;
+            iotB[i].ethg++ <--> ethernetline <--> routerB.ethg++;
         }
         for i=0..numIoT-1 {
-            c_IoT[i].ethg++ <--> ethernetline <--> router_2.ethg++;
+            iotC[i].ethg++ <--> ethernetline <--> routerC.ethg++;
         }
-        //for i=0..numIoT-1 {
-        	//if (i < numIoT/3 - 1) {
-        	//	IoT[i].ethg++ <--> ethernetline <--> router_0.ethg++;
-        	//} else if (i < numIoT/3*2-1) {
-        	//	IoT[i].ethg++ <--> ethernetline <--> router_1.ethg++;
-        	//} else {
-        	//	IoT[i].ethg++ <--> ethernetline <--> router_2.ethg++;
-        	//}
-        //}
 }
 
 
@@ -157,12 +148,12 @@ network MultiTiered
         //    parameters:
         //        @display("p=62,156;i=block/cogwheel");
         //}
-        router_2: Router {
+        routerC: Router {
             parameters:
                 @display("p=474.38998,185.73999;i=abstract/router_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        router_1: Router {
+        routerB: Router {
             parameters:
                 @display("p=297.435,189.50499;i=abstract/router_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
@@ -182,7 +173,7 @@ network MultiTiered
                 @display("p=449.28998,79.064995;i=device/server_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        router_0: Router {
+        routerA: Router {
             @display("p=367.715,81.575;is=l");
             @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
@@ -191,12 +182,12 @@ network MultiTiered
                 @display("i=device/laptop_l;p=180.72,360.185");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        a_IoT[numIoT]: StandardHost {
+        iotA[numIoT]: StandardHost {
             parameters:
                 @display("p=297.435,348.88998");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        b_IoT[numIoT]: StandardHost {
+        iotB[numIoT]: StandardHost {
             parameters:
                 @display("p=494.46997,333.83");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
@@ -207,14 +198,14 @@ network MultiTiered
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
     connections allowunconnected:
-        serverB.ethg++ <--> ethernetline <--> router_1.ethg++;
-        serverC.ethg++ <--> ethernetline <--> router_2.ethg++;
-        router_0.ethg++ <--> ethernetline <--> router_2.ethg++;
-        serverA.ethg++ <--> ethernetline <--> router_0.ethg++;
-        router_0.ethg++ <--> ethernetline <--> router_1.ethg++;
-        serverC.ethg++ <--> ethernetline <--> router_2.ethg++;
-        a_IoT[0].ethg++ <--> router_1.ethg++;
-        clientsA[0].ethg++ <--> router_1.ethg++;
-        b_IoT[0].ethg++ <--> router_2.ethg++;
-        clientsB[0].ethg++ <--> router_2.ethg++;
+        serverB.ethg++ <--> ethernetline <--> routerB.ethg++;
+        serverC.ethg++ <--> ethernetline <--> routerC.ethg++;
+        routerA.ethg++ <--> ethernetline <--> routerC.ethg++;
+        serverA.ethg++ <--> ethernetline <--> routerA.ethg++;
+        routerA.ethg++ <--> ethernetline <--> routerB.ethg++;
+        serverC.ethg++ <--> ethernetline <--> routerC.ethg++;
+        iotA[0].ethg++ <--> routerB.ethg++;
+        clientsA[0].ethg++ <--> routerB.ethg++;
+        iotB[0].ethg++ <--> routerC.ethg++;
+        clientsB[0].ethg++ <--> routerC.ethg++;
 }
