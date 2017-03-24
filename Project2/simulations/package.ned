@@ -1,6 +1,5 @@
 package Project2.simulations;
 
-
 import inet.applications.httptools.configurator.HttpController;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.node.inet.Router;
@@ -9,16 +8,6 @@ import inet.applications.contract.ITCPApp;
 import inet.applications.httptools.browser.HttpBrowser;
 
 @license(LGPL);
-
-//
-// This file is part of an OMNeT++/OMNEST simulation example.
-//
-// Copyright (C) 2003 Ahmet Sekercioglu
-// Copyright (C) 2003-2015 Andras Varga
-//
-// This file is distributed WITHOUT ANY WARRANTY. See the file
-// `license' for details on this and other legal matters.
-//
 
 channel ethernetline extends ned.DatarateChannel
 {
@@ -35,9 +24,11 @@ channel ethernetline extends ned.DatarateChannel
 network TwoTiered
 {
     parameters:
-        double numclients @prompt("Number of clients") = default(10);
-        double numIoT @prompt("Number of IoT devices") = default(100); //effectively, the number of parking spaces per router
+        double numclients @prompt("Number of clients") = default(1);
+        double numIoT @prompt("Number of IoT devices") = default(10); //effectively, the number of parking spaces per router
         @display("bgb=1000,600;bgl=4");
+        //following line will show how many packets server receives
+        @figure[rcvdPkText](type=indicatorText; pos=420,20; anchor=w; font=,20; textFormat="packets received: %g"; initialValue=0);
     submodules:
         configurator: IPv4NetworkConfigurator {
             parameters:
@@ -158,12 +149,12 @@ network MultiTiered
                 @display("p=297.435,189.50499;i=abstract/router_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        serverB: StandardHost {
+        serverB1: StandardHost {
             parameters:
                 @display("p=204.56499,189.50499;i=device/server_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
-        serverC: StandardHost {
+        serverB2: StandardHost {
             parameters:
                 @display("p=586.08496,180.72;i=device/server_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
@@ -198,12 +189,12 @@ network MultiTiered
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
     connections allowunconnected:
-        serverB.ethg++ <--> ethernetline <--> routerB.ethg++;
-        serverC.ethg++ <--> ethernetline <--> routerC.ethg++;
+        serverB1.ethg++ <--> ethernetline <--> routerB.ethg++;
+        serverB2.ethg++ <--> ethernetline <--> routerC.ethg++;
         routerA.ethg++ <--> ethernetline <--> routerC.ethg++;
         serverA.ethg++ <--> ethernetline <--> routerA.ethg++;
         routerA.ethg++ <--> ethernetline <--> routerB.ethg++;
-        serverC.ethg++ <--> ethernetline <--> routerC.ethg++;
+        serverB2.ethg++ <--> ethernetline <--> routerC.ethg++;
         iotA[0].ethg++ <--> routerB.ethg++;
         clientsA[0].ethg++ <--> routerB.ethg++;
         iotB[0].ethg++ <--> routerC.ethg++;
