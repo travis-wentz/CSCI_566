@@ -92,9 +92,6 @@ network TwoTiered
         }
 
     connections allowunconnected:
-        router_A.ethg++ <--> ethernetline <--> serverA.ethg++;
-        routerB.ethg++ <--> ethernetline <--> serverA.ethg++;
-        routerC.ethg++ <--> ethernetline <--> serverA.ethg++;
         for i=0..numclients-1 {
             clientsA[i].ethg++ <--> ethernetline <--> router_A.ethg++;
         }
@@ -108,9 +105,12 @@ network TwoTiered
         for i=0..numIoT-1 {
             iotA[i].ethg++ <--> ethernetline <--> router_A.ethg++;
         }
+        router_A.ethg++ <--> ethernetline <--> serverA.ethg++;
         for i=0..numIoT-1 {
             iotB[i].ethg++ <--> ethernetline <--> routerB.ethg++;
         }
+        routerB.ethg++ <--> ethernetline <--> serverA.ethg++;
+        routerC.ethg++ <--> ethernetline <--> serverA.ethg++;
         for i=0..numIoT-1 {
             iotC[i].ethg++ <--> ethernetline <--> routerC.ethg++;
         }
