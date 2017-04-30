@@ -251,3 +251,52 @@ network MultiTiered
         routerB2.ethg++ <--> ethernetline <--> routerA.ethg++;
         routerA.ethg++ <--> ethernetline <--> serverA.ethg++;
 }
+
+//
+//
+// Clients and multiple servers
+//
+//
+network newMultiTiered
+{
+    parameters:
+        double numBServers @prompt("Number of child servers") = default(1);
+        @display("bgb=1000,600;bgl=4");
+    submodules:
+        configurator: IPv4NetworkConfigurator {
+            parameters:
+                //                moduleTypes = "Router StandardHost";
+                //                nonIPModuleTypes = "";
+                @display("p=58,79;i=block/cogwheel");
+        }
+        controller: HttpController {
+            parameters:
+                @display("p=62,156;i=block/cogwheel");
+        }
+        serverA: StandardHost {
+            parameters:
+                @display("p=232.17499,189.50499;i=device/server_l");
+                @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
+        }
+        routerA: Router {
+            parameters:
+                @display("p=371.47998,189.50499;i=abstract/router_l");
+                @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
+        }
+        routerB[numBServers]: Router {
+            parameters:
+                @display("p=371.47998,392.815;i=abstract/router_l");
+                @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
+        }
+        serverB[numBServers]: StandardHost {
+            parameters:
+                @display("p=175.7,392.815;i=device/server_l");
+                @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
+        }
+    connections:
+        for i=0..numBServers-1 {
+            routerB[i].ethg++ <--> ethernetline <--> routerA.ethg++;
+        	routerB[i].ethg++ <--> ethernetline <--> serverB[i].ethg++;
+        }
+        serverA.ethg++ <--> ethernetline <--> routerA.ethg++;
+}
