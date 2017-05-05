@@ -25,7 +25,7 @@ network TwoTiered
 {
     parameters:
         double numclients @prompt("Number of clients") = default(1);
-        double numIoT @prompt("Number of IoT devices") = default(1); //effectively, the number of parking spaces per router
+        double numIoT @prompt("Number of IoT devices") = default(5); //effectively, the number of parking spaces per router
         @display("bgb=1000,600;bgl=4");
         //following line will show how many packets server receives
         @figure[rcvdPkText](type=indicatorText; pos=420,20; anchor=w; font=,20; textFormat="packets received: %g"; initialValue=0);
@@ -42,7 +42,7 @@ network TwoTiered
             parameters:
                 @display("p=365.205,163.15;i=device/server_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
-                //@statistic[endToEndDelay](title="end-to-end delay"; source="messageAge(arrival)"; unit=s; record=histogram,vector; interpolationmode=none);
+                @statistic[endToEndDelay](title="end-to-end delay"; source="messageAge(arrival)"; unit=s; record=count,mean,histogram,vector?; interpolationmode=none);
 				//@statistic[dropRate](title="Drop rate"; source=count(drop)/count(arrival); record=last,vector?);        
         } //drop variable has to be defined.
         router_A: Router {
@@ -52,42 +52,42 @@ network TwoTiered
         }
         routerB: Router {
             parameters:
-                @display("p=367.715,317.51498;i=abstract/router_l");
+                @display("p=365.205,262.29498;i=abstract/router_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
         routerC: Router {
             parameters:
-                @display("p=165.65999,318.77;is=l");
+                @display("p=224.64499,247.23499;is=l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
         clientsA[numclients]: StandardHost {
             parameters:
-                @display("i=device/laptop_l;p=706.565,503.25497");
+                @display("i=device/laptop_l;p=657.62,409.12997");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
         clientsB[numclients]: StandardHost {
             parameters:
-                @display("i=device/laptop_l;p=332.57498,494.46997");
+                @display("i=device/laptop_l;p=325.04498,365.205");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
         clientsC[numclients]: StandardHost {
             parameters:
-                @display("i=device/laptop_l;p=67.77,493.215");
+                @display("i=device/laptop_l;p=110.439995,351.4");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
         iotA[numIoT]: StandardHost {
             parameters:
-                @display("p=591.105,493.215");
+                @display("p=532.12,422.935");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
         iotB[numIoT]: StandardHost {
             parameters:
-                @display("p=430.465,480.66498");
+                @display("p=439.25,351.4");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
         iotC[numIoT]: StandardHost {
             parameters:
-                @display("p=163.15,486.93997");
+                @display("p=212.095,396.58");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
         }
 
@@ -100,7 +100,7 @@ network TwoTiered
             parameters:
                 @display("p=163.15,43.925;i=device/server_l");
                 @statistic[hopCount](title="hop count"; source="arrival"; record=vector,stats; interpolationmode=none);
-                //@statistic[endToEndDelay](title="end-to-end delay"; source="messageAge(arrival)"; unit=s; record=histogram,vector; interpolationmode=none);
+                @statistic[endToEndDelay](title="end-to-end delay"; source="messageAge(arrival)"; unit=s; record=count,mean,histogram,vector?; interpolationmode=none);
 				//@statistic[dropRate](title="Drop rate"; source=count(drop)/count(arrival); record=last,vector?);        
         } //drop variable has to be defined.
     connections allowunconnected:
@@ -296,7 +296,7 @@ network newMultiTiered
     connections:
         for i=0..numBServers-1 {
             routerB[i].ethg++ <--> ethernetline <--> routerA.ethg++;
-        	routerB[i].ethg++ <--> ethernetline <--> serverB[i].ethg++;
+            routerB[i].ethg++ <--> ethernetline <--> serverB[i].ethg++;
         }
         serverA.ethg++ <--> ethernetline <--> routerA.ethg++;
 }
